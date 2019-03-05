@@ -9,7 +9,7 @@ RUN INSTALL_PKGS="yum install make gcc perl pcre-devel zlib-devel wget openssl-d
       --enablerepo=rhel-7-server-optional-rpms \
       --enablerepo=rhel-7-server-extras-rpms \
      $INSTALL_PKGS && \
-    yum remove haproxy18 && \
+    yum remove -y haproxy18 && \
     yum clean all -y && \
     rm -rf /var/cache/yum
 COPY . /tmp/src
