@@ -1,4 +1,4 @@
-FROM registry.redhat.io/rhel7:7.6
+FROM registry.redhat.io/openshift3/ose-haproxy-router 
 USER root
 
 RUN INSTALL_PKGS="yum install make gcc perl pcre-devel zlib-devel wget openssl-devel" && \
@@ -13,8 +13,5 @@ RUN INSTALL_PKGS="yum install make gcc perl pcre-devel zlib-devel wget openssl-d
     yum clean all -y && \
     rm -rf /var/cache/yum
 COPY . /tmp/src
-RUN cd /tmp/src && make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1
+RUN cd /tmp/src && make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 && cp /tmp/src/haproxy /usr/sbin
 
-FROM registry.redhat.io/openshift3/ose-haproxy-router
-COPY --from=0 /tmp/src/haproxy /usr/sbin
-USER haproxy
