@@ -13,5 +13,11 @@ RUN INSTALL_PKGS="yum install make gcc perl pcre-devel zlib-devel wget openssl-d
     yum clean all -y && \
     rm -rf /var/cache/yum
 COPY . /tmp/src
-RUN cd /tmp/src && make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 && make install PREFIX=/usr && cp /tmp/src/haproxy /usr/sbin
+RUN cd /tmp/src && make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 && make install PREFIX=/usr
 
+USER 1001
+EXPOSE 80 443
+WORKDIR /var/lib/haproxy/conf
+ENV TEMPLATE_FILE=/var/lib/haproxy/conf/haproxy-config.template \
+    RELOAD_SCRIPT=/var/lib/haproxy/reload-haproxy
+ENTRYPOINT ["/usr/bin/openshift-router"]
